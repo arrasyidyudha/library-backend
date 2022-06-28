@@ -81,6 +81,13 @@
                 @endif
             @endif
         </div>
+
+          <!-- Name -->
+          <div class="col-span-6 sm:col-span-4">
+            <x-jet-label for="roles" value="{{ __('Roles') }}" />
+            <x-jet-input id="roles" type="text" class="mt-1 block w-full" wire:model.defer="state.roles" autocomplete="roles" />
+            <x-jet-input-error for="roles" class="mt-2" />
+        </div>
     </x-slot>
 
     <x-slot name="actions">

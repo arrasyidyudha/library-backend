@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\BookCategoryController;
+use App\Http\Controllers\BookController;
+use App\Http\Controllers\BookGalleryController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,12 +22,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified'
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+Route::group(['middleware' => ['auth:sanctum','verified']], function () {
+   
+
+    Route::name('dashboard.')->prefix('dashboard')->group(function () {
+        Route::get('/', [DashboardController::class, 'index'])->name('index');
+
+        Route::middleware(['admin'])->group(function () {
+         Route::resource('book', BookController::class);
+         Route::resource('category', BookCategoryController::class);
+         Route::resource('book.gallery', BookGalleryController::class)->shallow()->only([
+            'index', 'create', 'store', 'destroy'
+        ]);
+      });
+   });
 });
